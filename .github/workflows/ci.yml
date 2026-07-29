@@ -1,0 +1,38 @@
+name: "Build (CI)"
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6.0.2
+
+      - name: "Setup .NET"
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: "Build"
+        run: dotnet build FlowNet.Configuration.slnx --configuration Debug
+
+      - name: "Test"
+        run: dotnet test FlowNet.Configuration.Test/FlowNet.Configuration.Test.csproj --configuration Debug --no-build
+
+      - name: "Upload package artifact"
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: "FlowNet.Configuration-packages"
+          path: |
+            FlowNet.Configuration/bin/Debug/*.nupkg
+            FlowNet.Configuration/bin/Debug/*.snupkg
+          archive: false
