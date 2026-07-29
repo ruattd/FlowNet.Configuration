@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageId>FlowNet.Configuration</PackageId>
+    <Title>Flow.NET Configuration</Title>
+    <Version>0.0.0</Version>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageTags>FlowNet;Flow;Configuration;SourceGenerator;.NET;Standard</PackageTags>
+    <Authors>ruattd and other contributors</Authors>
+    <Description>Prioritized configuration system for Flow.NET based on source generation</Description>
+    <RepositoryUrl>https://github.com/ruattd/FlowNet.Configuration</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\FlowNet.Configuration.CodeAnalysis\bin\$(Configuration)\netstandard2.0\FlowNet.Configuration.CodeAnalysis.dll" Pack="true" PackagePath="/analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FlowNet.Core" Version="0.2.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FlowNet.Configuration.CodeAnalysis\FlowNet.Configuration.CodeAnalysis.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+  <Target Name="DisableFlowCodeAnalysis" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="'%(Filename)' == 'FlowNet.CodeAnalysis'" />
+    </ItemGroup>
+  </Target>
+</Project>

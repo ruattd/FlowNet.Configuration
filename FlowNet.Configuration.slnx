@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="FlowNet.Configuration/FlowNet.Configuration.csproj" />
+  <Project Path="FlowNet.Configuration.CodeAnalysis/FlowNet.Configuration.CodeAnalysis.csproj" />
+  <Project Path="FlowNet.Configuration.Test/FlowNet.Configuration.Test.csproj" />
+</Solution>
