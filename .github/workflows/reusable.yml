@@ -1,0 +1,50 @@
+name: "Reusable Build"
+
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      config:
+        required: false
+        type: string
+        default: "Debug"
+      version:
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v6.0.2
+
+      - name: "Setup .NET"
+        uses: actions/setup-dotnet@v5.2.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: "Build Package"
+        run: |
+          VERSION=${{ inputs.version }}
+          VERSION=${VERSION#v}
+          dotnet build -c ${{ inputs.config }} FlowNet.Configuration.slnx ${VERSION:+-p:Version=$VERSION}
+
+      - name: "Test"
+        run: dotnet test -c ${{ inputs.config }} FlowNet.Configuration.Test/FlowNet.Configuration.Test.csproj --no-build
+
+      - name: "Upload Artifact (.nupkg)"
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          path: FlowNet.Configuration/bin/${{ inputs.config }}/*.nupkg
+          archive: false
+
+      - name: "Upload Artifact (.snupkg)"
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          path: FlowNet.Configuration/bin/${{ inputs.config }}/*.snupkg
+          archive: false
